@@ -20,7 +20,7 @@
     "/add/message": {
       "post": {
         "summary": "添加消息",
-        "description": "向指定会话添加一条或多条消息。支持用户消息与助手消息，可自定义创建时间。",
+        "description": "该接口用于向指定会话添加一条或多条消息。如本章的使用示例所示，您既可以在用户与助手的对话进行时实时写入，也可批量导入已有的历史记录，或补充用户的偏好和行为信息。所有添加的消息内容都会被 MemOS 转化为记忆，用于后续对话的召回与参考，从而支持对话历史管理、用户行为记录以及个性化交互。",
         "operationId": "add_message",
         "requestBody": {
           "required": true,
@@ -28,6 +28,18 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddMessageRequest"
+              },
+              "example": {
+                "user_id": "memos_user_123",
+                "conversation_id": "0610",
+                "messages": [
+                  {"role": "user", "content": "我想暑假出去玩，你能帮我推荐下吗？"},
+                  {"role": "assistant", "content": "好的！是自己出行还是和家人朋友一起呢？"},
+                  {"role": "user", "content": "肯定要带孩子啊，我们家出门都是全家一起。"},
+                  {"role": "assistant", "content": "明白了，所以你们是父母带孩子一块儿旅行，对吗？"},
+                  {"role": "user", "content": "对，带上孩子和老人，一般都是全家行动。"},
+                  {"role": "assistant", "content": "收到，那我会帮你推荐适合家庭出游的目的地。"}
+                ]
               }
             }
           }
@@ -49,7 +61,7 @@
     "/get/message": {
       "post": {
         "summary": "获取消息",
-        "description": "从指定会话中获取用户与助手的历史对话记录，可按数量限制返回结果。",
+        "description": "该接口用于获取指定会话的用户与助手历史对话记录，可按数量限制返回结果。如本章示例所示，您可以将返回的最近消息作为大模型生成回答的参考，以保持对话的连贯性和上下文理解；同时，也可在用户刷新或重新打开应用时恢复聊天上下文，确保用户体验连续一致，并为个性化交互提供支持。",
         "operationId": "get_message",
         "requestBody": {
           "required": true,
@@ -57,6 +69,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GetMessageRequest"
+              },
+              "example": {
+                "user_id": "memos_user_123",
+                "conversation_id": "0928",
+                "message_limit_number": 6
               }
             }
           }
@@ -78,7 +95,7 @@
     "/search/memory": {
       "post": {
         "summary": "查询记忆",
-        "description": "查询指定用户的记忆，返回与查询内容最相关的记忆片段。",
+        "description": "该接口用于查询指定用户的记忆，返回与输入查询内容最相关的记忆片段。您可以调用这些记忆片段作为参考，供大模型生成回答时使用。如本章示例所示，您可以在用户与 AI 对话过程中实时检索用户记忆，也可以对用户整体记忆进行全局检索，用于生成用户画像或支持个性化推荐，从而提升对话的连贯性与用户的个性化体验。",
         "operationId": "search_memory",
         "requestBody": {
           "required": true,
@@ -86,6 +103,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SearchMemoryRequest"
+              },
+              "example": {
+                "query": "国庆去哪玩",
+                "user_id": "memos_user_123",
+                "conversation_id": "0928"
               }
             }
           }
@@ -367,6 +389,7 @@
       },
       "SearchMemoryResponseData": {
         "type": "object",
+        "title": "SearchMemoryResponseData",
         "properties": {
           "memory_detail_list": {
             "type": "array",

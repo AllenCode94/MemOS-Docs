@@ -20,7 +20,7 @@
     "/add/message": {
       "post": {
         "summary": "Add Message",
-        "description": "Add one or more messages to a specified conversation. Supports both user and assistant messages, with optional custom creation time.",
+        "description": "This API allows you to add one or more messages to a specific conversation. As illustrated in the examples bellow, you can add messages in real time during a user-assistant interaction, import historical messages in bulk, or enrich the conversation with user preferences and behavior data. All added messages are transformed into memories by MemOS, enabling their retrieval in future conversations to support chat history management, user behavior tracking, and personalized interactions.",
         "operationId": "add_message",
         "requestBody": {
           "required": true,
@@ -28,6 +28,18 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddMessageRequest"
+              },
+              "example": {
+                "user_id": "memos_user_123",
+                "conversation_id": "0610",
+                "messages": [
+                  { "role": "user", "content": "I want to travel during summer vacation, can you recommend something?" },
+                  { "role": "assistant", "content": "Sure! Are you traveling alone, with family or with friends?" },
+                  { "role": "user", "content": "I'm bringing my kid. My family always travels together." },
+                  { "role": "assistant", "content": "Got it, so you're traveling with your children as a family, right?" },
+                  { "role": "user", "content": "Yes, with both kids and elderly, we usually travel as a whole family." },
+                  { "role": "assistant", "content": "Understood, I'll recommend destinations suitable for family trips." }
+                ]
               }
             }
           }
@@ -49,7 +61,7 @@
     "/get/message": {
       "post": {
         "summary": "Get Message",
-        "description": "Retrieve historical conversation records between a user and the assistant from a specified conversation. The number of results returned can be limited.",
+        "description": "This API retrieves the historical conversation records between a user and the assistant for a specified session, with the option to limit the number of results. As shown in the examples bellow, you can use the returned recent messages as references for the model when generating responses, maintaining dialogue coherence and contextual understanding. It can also be used to restore chat context when a user refreshes or reopens the app, ensuring a seamless user experience and supporting personalized interactions.",
         "operationId": "get_message",
         "requestBody": {
           "required": true,
@@ -57,6 +69,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GetMessageRequest"
+              },
+              "example": {
+                "user_id": "memos_user_123",
+                "conversation_id": "0928",
+                "message_limit_number": 6
               }
             }
           }
@@ -78,7 +95,7 @@
     "/search/memory": {
       "post": {
         "summary": "Search Memory",
-        "description": "Query the memories of a specified user and return the memory fragments most relevant to the query content.",
+        "description": "This API allows you to query a user’s memory and returns the fragments most relevant to the input. These can serve as references for the model when generating responses. As shown in the examples bellow, You can retrieve memory in real time during a user’s conversation with the AI, or perform a global search across their entire memory to create user profiles or support personalized recommendations, improving both dialogue coherence and personalization.",
         "operationId": "search_memory",
         "requestBody": {
           "required": true,
@@ -86,6 +103,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SearchMemoryRequest"
+              },
+              "example": {
+                "query": "Any suggestions for where to go during National Day?",
+                "user_id": "memos_user_123",
+                "conversation_id": "0928"
               }
             }
           }
@@ -370,6 +392,7 @@
       },
       "SearchMemoryResponseData": {
         "type": "object",
+        "title": "SearchMemoryResponseData",
         "properties": {
           "memory_detail_list": {
             "type": "array",
